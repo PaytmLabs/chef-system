@@ -34,12 +34,8 @@ upgrade_cmd = value_for_platform(
   'mac_os_x' => { 'default' => 'port upgrade installed' }
 )
 
-e = execute 'upgrade system packages' do
+execute 'upgrade system packages' do
   command upgrade_cmd
-  action :nothing
+  not_if { node['system']['upgrade_packages'] == 'false' }
 end
 
-if node['system']['upgrade_packages']
-  # supports type string if defined through metadata
-  e.run_action(:run) unless node['system']['upgrade_packages'] == 'false'
-end
