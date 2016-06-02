@@ -52,6 +52,10 @@ action :set do
 
   if %w(debian ubuntu).member? node['platform']
     package 'tzdata'
+    package 'dbus' do
+      only_if { platform?('debian') }
+      only_if { node['platform_version'] >= '8.4' }
+    end
 
     bash 'dpkg-reconfigure tzdata' do
       user 'root'
